@@ -1,0 +1,63 @@
+extends ../layout.pug
+
+block meta
+    title Update User
+
+block content
+    form(id="editUser") 
+        label(for="name") Name: 
+        input(type="text", name="name", id="name", value=`${user.name}`)
+
+        label(for="content") Email: 
+        input(type="email", name="email", id="email", value=`${user.email}`)
+
+        input(type="submit", value="Submit")
+
+    form(id="deleteUser")
+        input(type="submit", value="Delete User")
+
+    script.
+        const userID = JSON.parse("!{JSON.stringify(user.id)}");
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('editUser');
+            const nameInput = document.getElementById('name');
+            const emailInput = document.getElementById('email');
+
+            const formData = new URLSearchParams();
+            formData.set('name', nameInput.value);
+            formData.set('email', emailInput.value);
+
+            nameInput.addEventListener('input', function() {
+                formData.set('name', nameInput.value);
+            });
+
+            emailInput.addEventListener('input', function() {
+                formData.set('email', emailInput.value);
+            });
+
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                await fetch(`/users/edit/${userID}`, {
+                    method: 'PUT',
+                    body: formData.toString(),
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                }).then(data => window.location.href = data.url)
+            });
+
+            const deleteForm = document.getElementById('deleteUser');
+
+            deleteForm.addEventListener('submit', async function(event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                await fetch(`/users/edit/${userID}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).then(data => window.location.href = data.url)
+            });
+        });

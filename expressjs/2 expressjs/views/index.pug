@@ -1,0 +1,47 @@
+extends layout.pug 
+
+block meta
+  title Home
+
+block content 
+
+  form(id="myForm")
+    label(for="username") Username:
+    input(type="text", name="username", id="username", value="")
+    label(for="email") Email:
+    input(type="email", name="email", id="email", value="")
+    label(for="picture") Picture: 
+    input(type="file", name="picture", id="picture", value="")
+    input(type="submit", value="Submit")
+
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('myForm');
+        const usernameInput = document.getElementById('username');
+        const emailInput = document.getElementById('email');
+        const pictureInput = document.getElementById('picture');
+
+        const formData = new FormData();
+
+        usernameInput.addEventListener('input', function() {
+            formData.set('username', usernameInput.value);
+        });
+
+        emailInput.addEventListener('input', function() {
+            formData.set('email', emailInput.value);
+        });
+
+        pictureInput.addEventListener('change', function() {
+            formData.set('picture', pictureInput.files[0]);
+        });
+
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            await fetch('/users', {
+                method: 'POST',
+                body: formData,
+            })
+        });
+    });
+

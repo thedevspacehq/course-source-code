@@ -1,0 +1,87 @@
+extends ../layout.pug
+
+block meta
+    title Create New Post 
+
+block content
+    form(id="newPost") 
+        label(for="title") Title: 
+        br
+        input(type="text", name="title", id="title")
+        br
+        br
+
+        label(for="content") Content:
+        br
+        textarea(name="content", cols="30", rows="10", id="content") 
+        br
+        br
+
+        label(for="image")
+        br
+        input(type="file", name="image", id="image")
+        br
+        br
+
+        label(for="author") Author: 
+        br
+        select(name="author", id="author", required)
+            option(value="") Please choose an author
+            each author in authors
+                option(value=`${author.id}`) #{author.name}
+        br
+        br
+
+        label(for="tags") Tags: 
+        br
+        select(name="tags", id="tags", multiple, required)
+            option(value="") Please choose tags
+            each tag in tags
+                option(value=`${tag.id}`) #{tag.name}
+        br
+        br
+
+        input(type="submit", value="Submit")
+
+    script.
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('newPost');
+            const titleInput = document.getElementById('title');
+            const contentInput = document.getElementById('content');
+            const imageInput = document.getElementById('image');
+            const authorInput = document.getElementById('author');
+            const tagsInput = document.getElementById('tags');
+
+            const formData = new FormData();
+
+            titleInput.addEventListener('input', function() {
+                formData.set('title', titleInput.value);
+            });
+
+            contentInput.addEventListener('input', function() {
+                formData.set('content', contentInput.value);
+            });
+
+            imageInput.addEventListener('change', function() {
+                formData.set('image', imageInput.files[0]);
+            });
+
+            authorInput.addEventListener('change', function() {
+                formData.set('author', authorInput.value);
+            });
+
+            tagsInput.addEventListener('change', function() {
+                const selected = Array.from(tagsInput.selectedOptions).map(({ value }) => value);
+
+                formData.set('tags', selected);
+            });
+
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                await fetch('/posts/new', {
+                    method: 'POST',
+                    body: formData,
+                }).then(data => window.location.href = data.url);
+            });
+        });

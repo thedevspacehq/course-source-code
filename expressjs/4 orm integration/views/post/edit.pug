@@ -1,0 +1,69 @@
+extends ../layout.pug
+
+block meta
+    title Update Post
+
+block content
+    form(id="editPost") 
+        label(for="title") Title: 
+        input(type="text", name="title", id="title", value=`${post.title}`)
+
+        label(for="content") Content: 
+        textarea(name="content", cols="30", rows="10", id="content") #{post.content}
+
+        label(for="picture")
+        input(type="file", name="picture", id="picture")
+
+        input(type="submit", value="Submit")
+
+    form(id="deletePost")
+        input(type="submit", value="Delete Post")
+
+    script.
+        const postID = JSON.parse("!{JSON.stringify(post.id)}");
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('editPost');
+            const titleInput = document.getElementById('title');
+            const contentInput = document.getElementById('content');
+            const pictureInput = document.getElementById('picture');
+
+            const formData = new FormData();
+            formData.set('title', titleInput.value);
+            formData.set('content', contentInput.value);
+            formData.set('picture', pictureInput.files[0]);
+
+            titleInput.addEventListener('input', function() {
+                formData.set('title', titleInput.value);
+            });
+
+            contentInput.addEventListener('input', function() {
+                formData.set('content', contentInput.value);
+            });
+
+            pictureInput.addEventListener('change', function() {
+                formData.set('picture', pictureInput.files[0]);
+            });
+
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                await fetch(`/posts/edit/${postID}`, {
+                    method: 'PUT',
+                    body: formData,
+                }).then(data => window.location.href = data.url)
+            });
+
+            const deleteForm = document.getElementById('deletePost');
+
+            deleteForm.addEventListener('submit', async function(event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                await fetch(`/posts/edit/${postID}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).then(data => window.location.href = data.url)
+            });
+        });

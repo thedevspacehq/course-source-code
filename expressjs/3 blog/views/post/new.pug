@@ -1,0 +1,48 @@
+extends ../layout.pug
+
+block meta
+    title Create New Post 
+
+block content
+    form(id="newPost") 
+        label(for="title") Title: 
+        input(type="text", name="title", id="title")
+
+        label(for="content") Content:
+        textarea(name="content", cols="30", rows="10", id="content") 
+
+        label(for="picture")
+        input(type="file", name="picture", id="picture")
+
+        input(type="submit", value="Submit")
+
+    script.
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('newPost');
+            const titleInput = document.getElementById('title');
+            const contentInput = document.getElementById('content');
+            const pictureInput = document.getElementById('picture');
+
+            const formData = new FormData();
+
+            titleInput.addEventListener('input', function() {
+                formData.set('title', titleInput.value);
+            });
+
+            contentInput.addEventListener('input', function() {
+                formData.set('content', contentInput.value);
+            });
+
+            pictureInput.addEventListener('change', function() {
+                formData.set('picture', pictureInput.files[0]);
+            });
+
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                await fetch('/posts/new', {
+                    method: 'POST',
+                    body: formData,
+                }).then(data => window.location.href = data.url);
+            });
+        });

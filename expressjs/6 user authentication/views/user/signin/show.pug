@@ -1,0 +1,47 @@
+extends ../../layout.pug
+
+block meta
+    name Sign In
+
+block content
+    form(id="signIn") 
+        label(for="email") Email:
+        input(type="email", name="email", id="email")
+        br
+        br
+
+        label(for="password") Password:
+        input(type="password", name="password", id="password")
+        br
+        br
+
+        input(type="submit", value="Submit")
+
+    script.
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('signIn');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+
+            const formData = new URLSearchParams();
+
+            emailInput.addEventListener('input', function() {
+                formData.set('email', emailInput.value);
+            });
+
+            passwordInput.addEventListener('input', function() {
+                formData.set('password', passwordInput.value);
+            });
+
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                await fetch('/users/signin', {
+                    method: 'POST',
+                    body: formData.toString(),
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                }).then(data => window.location.href = data.url);
+            });
+        });

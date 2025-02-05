@@ -1,0 +1,12 @@
+extends ../layout.pug
+
+block meta
+    title Tags
+
+block content
+    ul 
+    each tag in tags
+      li 
+        a(href=`/tags/${tag.id}`) #{tag.name}
+    else
+      li No tag found.

@@ -1,0 +1,15 @@
+extends ../layout.pug
+
+block meta
+    title #{tag.name}
+
+block content
+    p #{tag.name}
+    p #{tag.email}
+
+    p Posts with this tag: 
+    each post in tag.posts
+      li 
+        a(href=`/posts/${post.id}`) #{post.title}
+
+    a(href=`/tags/edit/${tag.id}`) Edit this tag

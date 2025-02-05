@@ -1,0 +1,10 @@
+extends ../layout.pug
+
+block meta
+    title #{user.name}
+
+block content
+    p #{user.name}
+    p #{user.email}
+
+    a(href=`/users/edit/${user.id}`) Edit this user

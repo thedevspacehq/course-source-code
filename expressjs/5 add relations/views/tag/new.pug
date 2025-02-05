@@ -1,0 +1,35 @@
+extends ../layout.pug
+
+block meta
+    name Create New Tag 
+
+block content
+    form(id="newTag") 
+        label(for="name") Name: 
+        input(type="text", name="name", id="name")
+
+        input(type="submit", value="Submit")
+
+    script.
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('newTag');
+            const nameInput = document.getElementById('name');
+
+            const formData = new URLSearchParams();
+
+            nameInput.addEventListener('input', function() {
+                formData.set('name', nameInput.value);
+            });
+
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                await fetch('/tags/new', {
+                    method: 'POST',
+                    body: formData.toString(),
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                }).then(data => window.location.href = data.url);
+            });
+        });

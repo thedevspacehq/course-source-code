@@ -1,0 +1,12 @@
+extends ./layout.pug
+
+block meta
+    title My New Blog
+
+block content
+    ul 
+    each post in posts
+      li 
+        a(href=`/posts/${post.id}`) #{post.title}
+    else
+      li No post found.

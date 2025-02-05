@@ -1,0 +1,65 @@
+extends layout.pug 
+
+block meta
+  title User #{user.username}
+
+block content 
+  p Username: #{user.username}
+  p Email: #{user.email}
+
+  form(id="myForm")
+    label(for="username") Username:
+    input(type="text", name="username", id="username", value=`${user.username}`)
+    label(for="email") Email:
+    input(type="email", name="email", id="email", value=`${user.email}`)
+    input(type="submit", value="Submit")
+
+  form(id="delete")
+    input(type="submit", value="Delete User")
+
+  script.
+    const userID = JSON.parse("!{JSON.stringify(user.id)}");
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('myForm');
+        const usernameInput = document.getElementById('username');
+        const emailInput = document.getElementById('email');
+
+        const formData = new URLSearchParams();
+        formData.set('username', usernameInput.value);
+        formData.set('email', emailInput.value);
+
+        usernameInput.addEventListener('input', function() {
+            formData.set('username', usernameInput.value);
+        });
+
+        emailInput.addEventListener('input', function() {
+            formData.set('email', emailInput.value);
+        });
+
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            await fetch(`/users/${userID}`, {
+                method: 'PUT',
+                body: formData.toString(),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+        });
+
+        const deleteForm = document.getElementById('delete');
+
+        deleteForm.addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            await fetch(`/users/${userID}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+        });
+
+    });

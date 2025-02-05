@@ -1,0 +1,10 @@
+extends ../layout.pug
+
+block meta
+    title #{tag.name}
+
+block content
+    p #{tag.name}
+    p #{tag.email}
+
+    a(href=`/tags/edit/${tag.id}`) Edit this tag

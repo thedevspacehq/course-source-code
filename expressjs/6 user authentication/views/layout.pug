@@ -1,0 +1,26 @@
+doctype html
+html
+    head
+        block meta
+        link(rel="stylesheet", href="/statics/css/app.css")
+
+    body
+        nav
+            ul 
+                li 
+                    a(href="/posts/new") New Post
+                li 
+                    a(href="/tags/new") New Tag
+                li 
+                    a(href="/users/new") New User
+                li 
+                    a(href="/") Home
+                li 
+                    a(href="/tags") Tags
+                li 
+                    a(href="/users") Users
+                li 
+                    a(href="/users/signin") Sign In
+        block content
+        footer
+        script(src="/statics/js/app.js") 
